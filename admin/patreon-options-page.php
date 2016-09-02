@@ -16,8 +16,11 @@ if ( is_admin() ){
   add_action('admin_init', 'patreon_plugin_register_settings' );
 }
 
-function patreon_plugin_register_settings() { // whitelist options
-	register_setting( 'patreon-options', 'patreon-client-id' );
+function patreon_plugin_register_settings() 
+{ 
+    // whitelist options
+	register_setting( 'patreon-options', 'patreon-disable-auto-login' );
+    register_setting( 'patreon-options', 'patreon-client-id' );
     register_setting( 'patreon-options', 'patreon-client-secret' );
     register_setting( 'patreon-options', 'patreon-creators-access-token' );
     register_setting( 'patreon-options', 'patreon-creators-refresh-token' );
@@ -26,23 +29,22 @@ function patreon_plugin_register_settings() { // whitelist options
     register_setting( 'patreon-options', 'patreon-rewrite-rules-flushed' );
 }
 
-function patreon_plugin_setup(){
+function patreon_plugin_setup()
+{
     add_menu_page( 'Patreon Settings', 'Patreon Settings', 'manage_options', 'patreon-plugin', 'patreon_plugin_setup_page' );
 }
 
-function patreon_plugin_setup_page(){
-
+function patreon_plugin_setup_page()
+{
     /* update Patreon creator ID on page load */
-    if(get_option('patreon-client-id', false) && get_option('patreon-client-secret', false) && get_option('patreon-creators-access-token', false)) {
-
+    if (get_option('patreon-client-id', false) && get_option('patreon-client-secret', false) && get_option('patreon-creators-access-token', false)) 
+    {
         $creator_id = Patreon_Wordpress::getPatreonCreatorID();
 
-        if($creator_id != false) {
+        if ($creator_id != false) {
             update_option( 'patreon-creator-id', $creator_id );
         }
-
     }
-
 ?>
 
 <h1>Patreon API Settings</h1>
@@ -86,7 +88,7 @@ function patreon_plugin_setup_page(){
         <td><input type="text" name="patreon-creators-refresh-token" value="<?php echo esc_attr( get_option('patreon-creators-refresh-token', '') ); ?>" class="large-text" /></td>
         </tr>
 
-        <?php if(get_option('patreon-creator-id', false)) { ?>
+        <?php if (get_option('patreon-creator-id', false)) { ?>
         <tr valign="top">
         <th scope="row">Creator ID</th>
         <td><input type="text" value="<?php echo esc_attr( get_option('patreon-creator-id', '') ); ?>" disabled class="large-text" /></td>
@@ -97,11 +99,10 @@ function patreon_plugin_setup_page(){
         <th scope="row">URL for image to show when user is not yet a patron (or not yet paying enough)</th>
         <td><input type="text" name="patreon-paywall-img-url" value="<?php echo esc_attr( get_option('patreon-paywall-img-url', '') ); ?>" class="large-text" /></td>
         </tr>
-
     </table>
 
     <?php submit_button(); ?>
-
+    
 </form>
 
 <?php

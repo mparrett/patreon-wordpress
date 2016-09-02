@@ -21,5 +21,3 @@ include 'admin/patreon-content-metabox.php';
 include 'classes/patreon_wordpress.php';
 
 $Patreon_Wordpress = new Patreon_Wordpress;
-
-?>

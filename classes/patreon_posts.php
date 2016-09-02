@@ -14,13 +14,15 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
-class Patreon_Posts {
-
-	function __construct() {
+class Patreon_Posts
+{
+	function __construct()
+	{
 		add_action( 'init', array($this, 'registerPatreonPost') );
 	}
 
-	function registerPatreonPost() {
+	function registerPatreonPost()
+	{
 		$labels = array(
 			'name'               => _x( 'Patreon Content', 'post type general name' ),
 			'singular_name'      => _x( 'Patreon Content', 'post type singular name' ),
@@ -49,9 +51,4 @@ class Patreon_Posts {
 		);
 		register_post_type( 'patreon-content', $args );	
 	}
-
-
 }
-
-
-?>

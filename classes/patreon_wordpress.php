@@ -14,14 +14,14 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
-class Patreon_Wordpress {
-
+class Patreon_Wordpress
+{
 	private static $Patreon_Routing;
 	private static $Patreon_Frontend;
 	private static $Patreon_Posts;
 
-	function __construct() {
-
+	function __construct()
+	{
 		include 'patreon_login.php';
 		include 'patreon_routing.php';
 		include 'patreon_frontend.php';
@@ -34,34 +34,36 @@ class Patreon_Wordpress {
 		self::$Patreon_Posts = new Patreon_Posts;
 
 		add_action('wp_head', array($this, 'updatePatreonUser') );
-
 	}
 
-	static function getPatreonUser($user) {
-
+	static function getPatreonUser($user)
+	{
 		/* get user meta data and query patreon api */
 		$user_meta = get_user_meta($user->ID);
-		if(isset($user_meta['patreon_access_token'][0])) {
+		
+		if (isset($user_meta['patreon_access_token'][0])) {
 			$api_client = new Patreon_API($user_meta['patreon_access_token'][0]);
 			$user = $api_client->fetch_user();
 			return $user;
 		}
 
 		return false;
-
 	}
 
-	static function updatePatreonUser() {
-
+	/**
+	 * Updates the WordPress user metadata from the Patreon user
+	 */
+	static function updatePatreonUser()
+	{
 		/* check if current user is loggedin, get ID */
 		$user = wp_get_current_user();
-		if($user == false) {
+		if ($user == false) {
 			return false;
 		}
 
 		/* query Patreon API to get users patreon details */
 		$user_reponse = self::getPatreonUser($user);
-		if($user_reponse == false) {
+		if ($user_reponse == false) {
 			return false;
 		}
 
@@ -70,16 +72,14 @@ class Patreon_Wordpress {
 		update_user_meta($user->ID, 'patreon_created', $user_reponse['data']['attributes']['created']);
 		update_user_meta($user->ID, 'user_firstname', $user_reponse['data']['attributes']['first_name']);
 		update_user_meta($user->ID, 'user_lastname', $user_reponse['data']['attributes']['last_name']);
-
 	}
 
-	public static function getPatreonCreatorID() {
-
+	public static function getPatreonCreatorID()
+	{
 		$api_client = new Patreon_API(get_option('patreon-creators-access-token', false));
+	    $user_response = $api_client->fetch_campaign_and_patrons();
 
-        $user_response = $api_client->fetch_campaign_and_patrons();
-
-        if(empty($user_response)) {
+        if (empty($user_response)) {
         	return false;
         }
 
@@ -95,13 +95,15 @@ class Patreon_Wordpress {
         }
 
         return $creator_id;
-
 	}
 
-	public static function getUserPatronage() {
-
+	/**
+	 * Returns the Patronage level or false
+	 */
+	public static function getUserPatronage()
+	{
 		$user = wp_get_current_user();
-		if($user == false) {
+		if ($user == false) {
 			return false;
 		}
 
@@ -110,7 +112,7 @@ class Patreon_Wordpress {
 
 		$user_response = self::getPatreonUser($user);
 
-		if($user_response == false) {
+		if ($user_response == false) {
 			return false;
 		}
 
@@ -124,38 +126,29 @@ class Patreon_Wordpress {
 			}
 		}
 
-		if($pledge != false) {
+		if ($pledge != false) {
 			return self::getUserPatronageLevel($pledge);
 		}
 
 		return false;
-
 	}
 
-	public static function getUserPatronageLevel($pledge) {
-
+	public static function getUserPatronageLevel($pledge)
+	{
 		$patronage_level = 0;
 
-		if(isset($pledge['attributes']['amount_cents'])) {
+		if (isset($pledge['attributes']['amount_cents'])) {
 			$patronage_level = $pledge['attributes']['amount_cents'];
 		}
 
 		return $patronage_level;
-
 	}
 
-	public static function isPatron() {
-
+	public static function isPatron()
+	{
 		$user_patronage = self::getUserPatronage($user);
 
-		if($user_patronage > 0) {
-			return true;
-		}
-
-		return false;
-
+		return $user_patronage > 0;
 	}
 
 }
-
-?>

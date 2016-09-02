@@ -2,17 +2,19 @@
 
 if( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-class Patreon_OAuth {
-
+class Patreon_OAuth
+{
 	private $client_id;
 	private $client_secret;
 
-	public function __construct() {
+	public function __construct()
+	{
 		$this->client_id = get_option('patreon-client-id', false);
 		$this->client_secret = get_option('patreon-client-secret', false);
 	}
 
-	public function get_tokens($code, $redirect_uri) {
+	public function get_tokens($code, $redirect_uri)
+	{
 		return $this->__update_token(array(
 			"grant_type" => "authorization_code",
 			"code" => $code,
@@ -22,7 +24,8 @@ class Patreon_OAuth {
 		));
 	}
 
-	public function refresh_token($refresh_token, $redirect_uri) {
+	public function refresh_token($refresh_token, $redirect_uri)
+	{
 		return $this->__update_token(array(
 			"grant_type" => "refresh_token",
 			"refresh_token" => $refresh_token,
@@ -31,7 +34,8 @@ class Patreon_OAuth {
 		));
 	}
 
-	private function __update_token($params) {
+	private function __update_token($params)
+	{
 		$api_endpoint = "https://api.patreon.com/oauth2/token";
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, $api_endpoint);
@@ -41,5 +45,3 @@ class Patreon_OAuth {
 		return json_decode(curl_exec($ch), true);
 	}
 }
-
-?>
