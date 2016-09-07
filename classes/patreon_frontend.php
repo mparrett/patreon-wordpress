@@ -33,6 +33,8 @@ class Patreon_Frontend
 			return '';
 		}
 
+		// TODO: Handle logged in Patron
+
 		$href = 'https://www.patreon.com/oauth2/authorize?response_type=code&client_id='.$client_id.'&redirect_uri='.urlencode(site_url().'/patreon-authorization/');
 
 		/* inline styles, for shame */
@@ -137,6 +139,8 @@ class Patreon_Frontend
 	function protectContentFromUsers($content)
 	{
 		global $post;
+
+		$content = '';
 
 		if ((is_singular('patreon-content') && get_post_type() == 'patreon-content') || (is_singular() && get_post_type() == 'post')) 
 		{

@@ -94,6 +94,7 @@ class Patreon_Login
 		{
 			// Redirect and manual login
 			wp_redirect( wp_login_url().'?patreon-msg=login_with_patreon', '301' );
+			exit;
 		}
 	}
 

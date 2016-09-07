@@ -34,8 +34,8 @@ class Patreon_Routing
 
 	function deactivate()
 	{
-		remove_action( 'generate_rewrite_rules','add_rewrite_rules' );
 		global $wp_rewrite;
+		remove_action( 'generate_rewrite_rules','add_rewrite_rules' );
 		$wp_rewrite->flush_rules();
 	}
 

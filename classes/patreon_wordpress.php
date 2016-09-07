@@ -67,11 +67,13 @@ class Patreon_Wordpress
 			return false;
 		}
 
+		$patreon_user = $user_reponse['data']['attributes'];
+
 		/* all the details you want to update on wordpress user account */
-		update_user_meta($user->ID, 'patreon_user', $user_reponse['data']['attributes']['vanity']);
-		update_user_meta($user->ID, 'patreon_created', $user_reponse['data']['attributes']['created']);
-		update_user_meta($user->ID, 'user_firstname', $user_reponse['data']['attributes']['first_name']);
-		update_user_meta($user->ID, 'user_lastname', $user_reponse['data']['attributes']['last_name']);
+		update_user_meta($user->ID, 'patreon_user', $patreon_user['vanity']);
+		update_user_meta($user->ID, 'patreon_created', $patreon_user['created']);
+		update_user_meta($user->ID, 'user_firstname', $patreon_user['first_name']);
+		update_user_meta($user->ID, 'user_lastname', $patreon_user['last_name']);
 	}
 
 	public static function getPatreonCreatorID()
