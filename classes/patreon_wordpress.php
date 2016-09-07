@@ -138,6 +138,9 @@ class Patreon_Wordpress
 		return false;
 	}
 
+	/**
+	 * Get the Patronage amount in cents
+	 */
 	public static function getUserPatronageLevel($pledge)
 	{
 		$patronage_level = 0;
@@ -149,6 +152,9 @@ class Patreon_Wordpress
 		return $patronage_level;
 	}
 
+	/**
+	 * Check if Patronage is nonzero and positive
+	 */
 	public static function isPatron()
 	{
 		$user_patronage = self::getUserPatronage($user);
