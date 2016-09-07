@@ -70,7 +70,7 @@ class Patreon_Login
 				update_user_meta($user_id, 'patreon_token_minted', microtime());
 
 				// Log in current user
-				$this->_login_user($user);
+				self::_login_user($user);
 			} 
 			else 
 			{
@@ -88,7 +88,7 @@ class Patreon_Login
 		// log user into existing wordpress account with matching email address -- if not disabled
 		if (!get_option('patreon-disable-auto-login', false))
 		{
-			$this->_login_user($user);
+			self::_login_user($user);
 		}
 		else
 		{
@@ -101,7 +101,7 @@ class Patreon_Login
 	/**
 	 * Logins in an existing user fetched with get_user_by
 	 */
-    private function _login_user($user)
+    private static function _login_user($user)
 	{
 		wp_set_current_user( $user->ID, $user->user_login );
 		wp_set_auth_cookie( $user->ID );
