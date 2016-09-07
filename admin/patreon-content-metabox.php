@@ -11,9 +11,13 @@ Author URI: http://uiux.me
 
 if( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
+// Posts
 add_action( 'load-post.php', 'patreon_plugin_meta_boxes_setup' );
 add_action( 'load-post-new.php', 'patreon_plugin_meta_boxes_setup' );
 
+// Pages
+add_action( 'load-page.php', 'patreon_plugin_meta_boxes_setup' );
+add_action( 'load-page-new.php', 'patreon_plugin_meta_boxes_setup' );
 
 function patreon_plugin_meta_boxes_setup()
 {
@@ -55,8 +59,6 @@ function patreon_plugin_meta_box( $object, $box ) { ?>
 
 function patreon_plugin_save_post_class_meta( $post_id, $post )
 {
-	// var_dump($_POST['patreon-level']);exit;
-
 	if ( !isset( $_POST['patreon_metabox_nonce'] ) || !wp_verify_nonce( $_POST['patreon_metabox_nonce'], basename( __FILE__ ) ) )
 		return $post_id;
 

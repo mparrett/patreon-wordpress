@@ -76,6 +76,9 @@ class Patreon_Wordpress
 		update_user_meta($user->ID, 'user_lastname', $patreon_user['last_name']);
 	}
 
+	/**
+	 * Get the creator ID from the Patreon API
+	 */
 	public static function getPatreonCreatorID()
 	{
 		$api_client = new Patreon_API(get_option('patreon-creators-access-token', false));
