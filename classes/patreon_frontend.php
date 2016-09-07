@@ -14,8 +14,8 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
-class Patreon_Frontend {
-
+class Patreon_Frontend 
+{
 	function __construct()
 	{
 		add_action( 'login_form', array($this, 'showPatreonButton' ) );
@@ -60,7 +60,7 @@ class Patreon_Frontend {
         if (isset($_SERVER['HTTPS']) && $_SERVER["HTTPS"] == "on") {
             $pageURL .= "s";
         }
-		
+
         $pageURL .= "://";
         if ($_SERVER["SERVER_PORT"] != "80") {
             $pageURL .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
