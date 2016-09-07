@@ -58,7 +58,7 @@ class Patreon_Login
 				$this->_login_user($user);
 				
 				/* update user meta data with patreon data */
-				$this->_update_all_meta($user_id, $tokens, $user_response);
+				self::_update_all_meta($user_id, $tokens, $user_response);
 		
 				update_user_meta($user_id, 'patreon_token_minted', microtime());
 				
@@ -75,7 +75,7 @@ class Patreon_Login
 			}
 
 			/* update user meta data with patreon data */
-			$this->_update_all_meta($user->ID, $tokens, $user_response);
+			self::_update_all_meta($user->ID, $tokens, $user_response);
 			wp_redirect( wp_login_url().'?patreon-msg=login_with_patreon', '301' );
 			exit;
 
@@ -92,7 +92,7 @@ class Patreon_Login
 	/**
  	 * Updates WordPress metadata from Patreon user
  	 */
-	private function _update_all_meta($user_id, $tokens, $user_response)
+	private static function _update_all_meta($user_id, $tokens, $user_response)
 	{
 		update_user_meta($user_id, 'patreon_refresh_token', $tokens['refresh_token']);
 		update_user_meta($user_id, 'patreon_access_token', $tokens['access_token']);
@@ -101,5 +101,5 @@ class Patreon_Login
 		update_user_meta($user_id, 'user_firstname', $user_response['data']['attributes']['first_name']);
 		update_user_meta($user_id, 'user_lastname', $user_response['data']['attributes']['last_name']);
 	}
-	
+
 }
