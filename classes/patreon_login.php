@@ -86,7 +86,7 @@ class Patreon_Login
 		self::_update_all_meta($user->ID, $tokens, $patreon_user);
 
 		// log user into existing wordpress account with matching email address -- if not disabled
-		if (get_option('patreon-disable-auto-login', false))
+		if (!get_option('patreon-disable-auto-login', false))
 		{
 			$this->_login_user($user);
 		}
