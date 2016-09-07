@@ -100,6 +100,7 @@ class Patreon_Routing
 		$user = Patreon_Login::createUserFromPatreon($user_response, $tokens);
 
 		wp_redirect( home_url(), 302 );
+		
 		exit;
 	}
 }

@@ -27,23 +27,18 @@ function patreon_plugin_meta_boxes_setup()
 
 function patreon_plugin_meta_boxes()
 {
-	add_meta_box(
-		'patreon-level',      // Unique ID
-		esc_html__( 'Patreon Level', 'Patreon Contribution Requirement' ),
-		'patreon_plugin_meta_box',
-		'patreon-content',
-		'side',
-		'default'
-	);
-
-	add_meta_box(
-		'patreon-level',      // Unique ID
-		esc_html__( 'Patreon Level', 'Patreon Contribution Requirement' ),
-		'patreon_plugin_meta_box',
-		'post',
-		'side',
-		'default'
-	);
+	// Add meta boxes for all 3 types
+	foreach (array('patreon-content', 'post', 'page') as $type)
+	{ 
+		add_meta_box(
+			'patreon-level',      // Unique ID
+			esc_html__( 'Patreon Level', 'Patreon Contribution Requirement' ),
+			'patreon_plugin_meta_box',
+			$type,
+			'side',
+			'default'
+		);
+	}
 }
 
 function patreon_plugin_meta_box( $object, $box ) { ?>
