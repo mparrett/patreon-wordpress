@@ -13,13 +13,11 @@ if (! defined('ABSPATH')) {
     exit;
 } // Exit if accessed directly
 
-// Posts
-add_action('load-post.php', 'patreon_plugin_meta_boxes_setup');
-add_action('load-post-new.php', 'patreon_plugin_meta_boxes_setup');
-
-// Pages
-add_action('load-page.php', 'patreon_plugin_meta_boxes_setup');
-add_action('load-page-new.php', 'patreon_plugin_meta_boxes_setup');
+if (is_admin()) {
+    // Posts
+    add_action('load-post.php', 'patreon_plugin_meta_boxes_setup');
+    add_action('load-post-new.php', 'patreon_plugin_meta_boxes_setup');
+}
 
 function patreon_plugin_meta_boxes_setup()
 {
