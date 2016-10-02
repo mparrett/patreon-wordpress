@@ -95,33 +95,34 @@ class Patreon_Frontend
         /* example shortcode [patreon_content slug="test-example"]
 
         /* check if shortcode has slug parameter */
-        if (isset($args['slug'])) {
-            /* get patreon-content post with matching url slug */
-            $patreon_content = get_page_by_path($args['slug'], OBJECT, 'patreon-content');
+        if (!isset($args['slug']))
+            return;
 
-            if ($patreon_content == false) {
-                return 'Patreon content not found.';
-            }
+        /* get patreon-content post with matching url slug */
+        $patreon_content = get_page_by_path($args['slug'], OBJECT, 'patreon-content');
 
-            $patreon_level = get_post_meta($patreon_content->ID, 'patreon-level', true);
+        if ($patreon_content == false) {
+            return 'Patreon content not found.';
+        }
 
-            if ($patreon_level == 0) {
+        $patreon_level = get_post_meta($patreon_content->ID, 'patreon-level', true);
+
+        if ($patreon_level == 0) {
+            return $patreon_content->post_content;
+        }
+
+        $user_patronage = Patreon_Wordpress::getUserPatronage();
+
+        if ($user_patronage != false) {
+            if (is_numeric($patreon_level) && $user_patronage >= ($patreon_level*100)) {
                 return $patreon_content->post_content;
             }
+        }
 
-            $user_patronage = Patreon_Wordpress::getUserPatronage();
-
-            if ($user_patronage != false) {
-                if (is_numeric($patreon_level) && $user_patronage >= ($patreon_level*100)) {
-                    return $patreon_content->post_content;
-                }
-            }
-
-            if (isset($args['youtube_id']) && isset($args['youtube_width']) && is_numeric($args['youtube_width']) && isset($args['youtube_height']) && is_numeric($args['youtube_height'])) {
-                return '<iframe width="'.$args['youtube_width'].'" height="'.$args['youtube_height'].'" src="https://www.youtube.com/embed/'.$args['youtube_id'].'?rel=0&amp;controls=0&amp;showinfo=0" frameborder="0" allowfullscreen></iframe>';
-            } else {
-                return self::displayPatreonCampaignBanner();
-            }
+        if (isset($args['youtube_id']) && isset($args['youtube_width']) && is_numeric($args['youtube_width']) && isset($args['youtube_height']) && is_numeric($args['youtube_height'])) {
+            return '<iframe width="'.$args['youtube_width'].'" height="'.$args['youtube_height'].'" src="https://www.youtube.com/embed/'.$args['youtube_id'].'?rel=0&amp;controls=0&amp;showinfo=0" frameborder="0" allowfullscreen></iframe>';
+        } else {
+            return self::displayPatreonCampaignBanner();
         }
     }
 
@@ -130,8 +131,10 @@ class Patreon_Frontend
         global $post;
 
         $content = '';
+        $post_type = get_post_type();
 
-        if ((is_singular('patreon-content') && get_post_type() == 'patreon-content') || (is_singular() && get_post_type() == 'post')) {
+        if ((is_singular('patreon-content') && $post_type == 'patreon-content') 
+            || (is_singular() && ($post_type == 'post' || $post_type == 'page'))) {
             $patreon_level = get_post_meta($post->ID, 'patreon-level', true);
 
             if ($patreon_level == 0) {
