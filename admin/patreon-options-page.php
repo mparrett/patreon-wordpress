@@ -45,7 +45,8 @@ function patreon_plugin_setup_page()
         if ($creator_id != false) {
             update_option('patreon-creator-id', $creator_id);
         }
-    } ?>
+    }
+?>
 
 <h1>Patreon API Settings</h1>
 
@@ -64,7 +65,12 @@ function patreon_plugin_setup_page()
 
     <h2>API Settings</h2>
     <table class="form-table">
-
+        
+        <tr valign="top">
+        <th scope="row">Plugin Version</th>
+        <td><input type="text" value="<?php echo PATREON_PLUGIN_VERSION; ?>" disabled class="large-text" /></td>
+        </tr>
+        
         <tr valign="top">
         <th scope="row">Redirect URI</th>
         <td><input type="text" value="<?php echo site_url().'/patreon-authorization/'; ?>" disabled class="large-text" /></td>
@@ -98,7 +104,7 @@ function patreon_plugin_setup_page()
         </tr>
         <?php 
     } ?>
-
+    
         <tr valign="top">
         <th scope="row">URL for image to show when user is not yet a patron (or not yet paying enough)</th>
         <td><input type="text" name="patreon-paywall-img-url" value="<?php echo esc_attr(get_option('patreon-paywall-img-url', '')); ?>" class="large-text" /></td>
