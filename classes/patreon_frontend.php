@@ -130,7 +130,6 @@ class Patreon_Frontend
     {
         global $post;
 
-        $content = '';
         $post_type = get_post_type();
 
         if ((is_singular('patreon-content') && $post_type == 'patreon-content') 
