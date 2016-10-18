@@ -15,7 +15,7 @@ if (! defined('WPINC')) {
 }
 
 define("PATREON_PLUGIN_URL", plugin_dir_url(__FILE__));
-define("PATREON_PLUGIN_VERSION", "0.9.2");
+define("PATREON_PLUGIN_VERSION", "0.9.3");
 
 include 'admin/patreon-options-page.php';
 include 'admin/patreon-content-metabox.php';

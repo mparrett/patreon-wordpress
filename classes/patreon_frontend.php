@@ -19,6 +19,8 @@ class Patreon_Frontend
     public function __construct()
     {
         add_action('login_form', array($this, 'showPatreonButton' ));
+        add_action('register_form', array($this, 'showPatreonButton' ));
+
         add_shortcode('patreon_content', array($this, 'embedPatreonContent'));
         add_filter('the_content', array($this, 'protectContentFromUsers'));
     }
@@ -33,22 +35,19 @@ class Patreon_Frontend
             return '';
         }
 
-        // TODO: Handle logged in Patron
+        // TODO: Handle logged in Patreon
 
-        $href = 'https://www.patreon.com/oauth2/authorize?response_type=code&client_id='.$client_id.'&redirect_uri='.urlencode(site_url().'/patreon-authorization/');
+        $href = 'https://www.patreon.com/oauth2/authorize?response_type=code&client_id='.$client_id.'&redirect_uri='.
+            urlencode(site_url().'/patreon-authorization/');
 
         /* inline styles, for shame */
-        echo '
-		<style type="text/css">
-		.ptrn-button{display:block;margin-bottom:20px!important;}
-		.ptrn-button img {width: 272px; height:42px;}
-		.patreon-msg {-webkit-border-radius: 6px;-moz-border-radius: 6px;-ms-border-radius: 6px;-o-border-radius: 6px;border-radius: 6px;padding:8px;margin-bottom:20px!important;display:block;border:1px solid #E6461A;background-color:#484848;color:#ffffff;}
-		</style>';
+        echo get_option('patreon-above-button-html', '');
 
         if (isset($_REQUEST['patreon-msg']) && $_REQUEST['patreon-msg'] == 'login_with_patreon') {
-            echo '<p class="patreon-msg">You can now login with your wordpress username/password.</p>';
+            echo get_option('patreon-login-wp-message-html', '');
         } else {
-            echo apply_filters('ptrn/login_button', '<a href="'.$href.'" class="ptrn-button" data-ptrn_nonce="' . wp_create_nonce('patreon-nonce').'"><img src="'.$log_in_img.'" width="272" height="42" /></a>');
+            echo apply_filters('ptrn/login_button', '<a href="'.$href.'" class="ptrn-button" data-ptrn_nonce="' . 
+                wp_create_nonce('patreon-nonce').'"><img src="'.$log_in_img.'" width="272" height="42" /></a>');
         }
     }
 
@@ -73,19 +72,21 @@ class Patreon_Frontend
     {
         /* patreon banner when user patronage not high enough */
         $paywall_img = get_option('patreon-paywall-img-url', '');
-        
-        if ($paywall_img == '') {
-            $paywall_img = 'https://s3-us-west-1.amazonaws.com/widget-images/become-patron-widget-medium.png';
-        }
-
         $paywall_img_elem = '<img src="'.$paywall_img.'"/>';
         
+        $paywall_img2 = get_option('patreon-paywall-img-url-2', '');
+        $paywall_img_elem2 = '<img src="'.$paywall_img2.'"/>';
+
         $creator_id = get_option('patreon-creator-id', '');
         $current_url = urlencode(self::currentPageURL());
 
         if ($creator_id != '') {
-            return '<a href="https://www.patreon.com/bePatron?u='.$creator_id.'&redirect_uri='.$current_url.'">'.$paywall_img_elem.'</a>';
+            $ret = '<a href="https://www.patreon.com/bePatron?u='.$creator_id.'&redirect_uri='.$current_url.'">'.$paywall_img_elem.'</a>';
+            if ($paywall_img2) {
+                $ret .= '<a href="https://www.patreon.com/bePatron?u='.$creator_id.'&redirect_uri='.$current_url.'">'.$paywall_img_elem2.'</a>';
+            }
         } else {
+            // No valid Patreon integration (expired token, etc.?)
             return $paywall_img_elem;
         }
     }

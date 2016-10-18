@@ -28,7 +28,10 @@ function patreon_plugin_register_settings()
     register_setting('patreon-options', 'patreon-creators-refresh-token');
     register_setting('patreon-options', 'patreon-creator-id');
     register_setting('patreon-options', 'patreon-paywall-img-url');
+    register_setting('patreon-options', 'patreon-paywall-img-url-2');
     register_setting('patreon-options', 'patreon-rewrite-rules-flushed');
+    register_setting('patreon-options', 'patreon-above-button-html');
+    register_setting('patreon-options', 'patreon-login-wp-message-html');
 }
 
 function patreon_plugin_setup()
@@ -38,6 +41,29 @@ function patreon_plugin_setup()
 
 function patreon_plugin_setup_page()
 {
+    // Set the default for above button html
+    $default_above_button = '<style type="text/css">
+		.ptrn-button{display:block;margin-bottom:20px!important;}
+		.ptrn-button img {width: 272px; height:42px;}
+		.patreon-msg {-webkit-border-radius: 6px;-moz-border-radius: 6px;-ms-border-radius: 6px;-o-border-radius: 6px;border-radius: 6px;'.
+            'padding:8px;margin-bottom:20px!important;display:block;border:1px solid #E6461A;background-color:#484848;color:#ffffff;}</style>';
+            
+    if (!get_option('patreon-above-button-html', false)) {
+        update_option('patreon-above-button-html', $default_above_button);
+    }
+
+    if (!get_option('patreon-login-wp-message-html', false)) {
+        update_option('patreon-login-wp-message-html', '<p class="patreon-msg">You can now login with your wordpress username/password.</p>');
+    }
+
+    if (!get_option('patreon-paywall-img-url', false)) {
+        update_option('patreon-paywall-img-url', 'https://s3-us-west-1.amazonaws.com/widget-images/become-patron-widget-medium.png');
+    }
+    
+    if (!get_option('patreon-paywall-img-url-2', false)) {
+        update_option('patreon-paywall-img-url-2', 'https://s3-us-west-1.amazonaws.com/widget-images/become-patron-widget-medium.png');
+    }
+    
     /* update Patreon creator ID on page load */
     if (get_option('patreon-client-id', false) && get_option('patreon-client-secret', false) && get_option('patreon-creators-access-token', false)) {
         $creator_id = Patreon_Wordpress::getPatreonCreatorID();
@@ -95,7 +121,7 @@ function patreon_plugin_setup_page()
         <th scope="row">Creator's Refresh Token</th>
         <td><input type="text" name="patreon-creators-refresh-token" value="<?php echo esc_attr(get_option('patreon-creators-refresh-token', '')); ?>" class="large-text" /></td>
         </tr>
-
+        
         <?php if (get_option('patreon-creator-id', false)) {
         ?>
         <tr valign="top">
@@ -106,8 +132,23 @@ function patreon_plugin_setup_page()
     } ?>
     
         <tr valign="top">
-        <th scope="row">URL for image to show when user is not yet a patron (or not yet paying enough)</th>
+        <th scope="row">Button URL: Not yet a patron (or not yet paying enough)</th>
         <td><input type="text" name="patreon-paywall-img-url" value="<?php echo esc_attr(get_option('patreon-paywall-img-url', '')); ?>" class="large-text" /></td>
+        </tr>
+
+        <tr valign="top">
+        <th scope="row">Additional Button URL: Not yet a patron (or not yet paying enough)</th>
+        <td><input type="text" name="patreon-paywall-img-url-2" value="<?php echo esc_attr(get_option('patreon-paywall-img-url-2', '')); ?>" class="large-text" /></td>
+        </tr>
+
+        <tr valign="top">
+        <th scope="row">Above Button HTML/CSS</th>
+        <td><textarea name="patreon-above-button-html" style="width:100%;" rows="6" cols="20"><?php echo esc_textarea(get_option('patreon-above-button-html', '')); ?></textarea></td>
+        </tr>
+
+        <tr valign="top">
+        <th scope="row">Message once authenticated (Login to WP)</th>
+        <td><textarea name="patreon-login-wp-message-html" style="width:100%;" rows="3" cols="20"><?php echo esc_textarea(get_option('patreon-login-wp-message-html', '')); ?></textarea></td>
         </tr>
     </table>
 
