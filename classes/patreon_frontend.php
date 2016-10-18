@@ -85,6 +85,7 @@ class Patreon_Frontend
             if ($paywall_img2) {
                 $ret .= '<a href="https://www.patreon.com/bePatron?u='.$creator_id.'&redirect_uri='.$current_url.'">'.$paywall_img_elem2.'</a>';
             }
+            return $ret;
         } else {
             // No valid Patreon integration (expired token, etc.?)
             return $paywall_img_elem;
