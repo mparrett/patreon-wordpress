@@ -32,6 +32,8 @@ function patreon_plugin_register_settings()
     register_setting('patreon-options', 'patreon-rewrite-rules-flushed');
     register_setting('patreon-options', 'patreon-above-button-html');
     register_setting('patreon-options', 'patreon-login-wp-message-html');
+    register_setting('patreon-options', 'patreon-auth-success-url');
+    register_setting('patreon-options', 'patreon-auth-error-url');
 }
 
 function patreon_plugin_setup()
@@ -64,6 +66,13 @@ function patreon_plugin_setup_page()
         update_option('patreon-paywall-img-url-2', 'https://s3-us-west-1.amazonaws.com/widget-images/become-patron-widget-medium.png');
     }
     
+    if (!get_option('patreon-auth-error-url', false)) {
+        update_option('patreon-auth-error-url', home_url());
+    }
+
+    if (!get_option('patreon-auth-success-url', false)) {
+        update_option('patreon-auth-success-url', home_url());
+    }
     /* update Patreon creator ID on page load */
     if (get_option('patreon-client-id', false) && get_option('patreon-client-secret', false) && get_option('patreon-creators-access-token', false)) {
         $creator_id = Patreon_Wordpress::getPatreonCreatorID();
@@ -139,6 +148,16 @@ function patreon_plugin_setup_page()
         <tr valign="top">
         <th scope="row">Additional Button URL: Not yet a patron (or not yet paying enough)</th>
         <td><input type="text" name="patreon-paywall-img-url-2" value="<?php echo esc_attr(get_option('patreon-paywall-img-url-2', '')); ?>" class="large-text" /></td>
+        </tr>
+        
+        <tr valign="top">
+        <th scope="row">Auth Success URL: Where to send user after successful auth with Patreon</th>
+        <td><input type="text" name="patreon-auth-success-url" value="<?php echo esc_attr(get_option('patreon-auth-success-url', '')); ?>" class="large-text" /></td>
+        </tr>
+        
+        <tr valign="top">
+        <th scope="row">Auth Error URL: Where to send user if auth error with Patreon (defaults to home)</th>
+        <td><input type="text" name="patreon-auth-error-url" value="<?php echo esc_attr(get_option('patreon-auth-error-url', '')); ?>" class="large-text" /></td>
         </tr>
 
         <tr valign="top">

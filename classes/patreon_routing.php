@@ -70,14 +70,16 @@ class Patreon_Routing
             return;
         }
 
+        $error_url = get_option('patreon-auth-error-url', home_url());
+
         if (!array_key_exists('code', $wp->query_vars)) {
-            wp_redirect(home_url());
+            wp_redirect($error_url);
             exit;
         }
 
         if (!get_option('patreon-client-id', false) || !get_option('patreon-client-secret', false)) {
             /* redirect to homepage because of oauth client_id or secure_key error #HANDLE_ERROR */
-            wp_redirect(home_url());
+            wp_redirect($error_url);
             exit;
         }
 
@@ -87,7 +89,7 @@ class Patreon_Routing
 
         if (array_key_exists('error', $tokens)) {
             /* redirect to homepage because of some error #HANDLE_ERROR */
-            wp_redirect(home_url());
+            wp_redirect($error_url);
             exit;
         }
 
@@ -96,7 +98,7 @@ class Patreon_Routing
         $user_response = $api_client->fetch_user();
         $user = Patreon_Login::createUserFromPatreon($user_response, $tokens);
 
-        wp_redirect(home_url(), 302);
+        wp_redirect(get_option('patreon-auth-success-url', home_url()), 302); // ??? Should this be a 302?
         
         exit;
     }
