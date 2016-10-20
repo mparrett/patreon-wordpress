@@ -16,6 +16,8 @@ if (! defined('WPINC')) {
 
 class Patreon_Wordpress
 {
+    public static $api_client;
+
     private static $Patreon_Routing;
     private static $Patreon_Frontend;
     private static $Patreon_Posts;
@@ -42,8 +44,8 @@ class Patreon_Wordpress
         $user_meta = get_user_meta($user->ID);
         
         if (isset($user_meta['patreon_access_token'][0])) {
-            $api_client = new Patreon_API($user_meta['patreon_access_token'][0]);
-            $user = $api_client->fetch_user();
+            self::$api_client = new Patreon_API($user_meta['patreon_access_token'][0]);
+            $user = self::$api_client->fetch_user();
             return $user;
         }
 
@@ -81,8 +83,21 @@ class Patreon_Wordpress
      */
     public static function getPatreonCreatorID()
     {
-        $api_client = new Patreon_API(get_option('patreon-creators-access-token', false));
-        $user_response = $api_client->fetch_campaign_and_patrons();
+        self::$api_client = new Patreon_API(get_option('patreon-creators-access-token', false));
+        $user_response = self::$api_client->fetch_campaign_and_patrons();
+
+        if (self::$api_client->lastResponseCode == 401) {
+            // Attempt to refresh token
+            
+            $oauth_client = new Patreon_Oauth;
+            $tok = get_option('patreon-creators-refresh-token');
+            $tokens = $oauth_client->refresh_token($tok, home_url());
+            if ($tokens && !empty($tokens['access_token'])) {
+                // $tokens['token_type'] == 'Bearer'
+                update_option('patreon-creators-access-token', $tokens['access_token']);
+                update_option('patreon-creators-access-token-expires', time() + $tokens['expires_in']);
+            }
+        }
 
         if (empty($user_response)) {
             return false;

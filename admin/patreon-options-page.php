@@ -26,6 +26,7 @@ function patreon_plugin_register_settings()
     register_setting('patreon-options', 'patreon-client-secret');
     register_setting('patreon-options', 'patreon-creators-access-token');
     register_setting('patreon-options', 'patreon-creators-refresh-token');
+    register_setting('patreon-options', 'patreon-creators-access-token-expires');
     register_setting('patreon-options', 'patreon-creator-id');
     register_setting('patreon-options', 'patreon-paywall-img-url');
     register_setting('patreon-options', 'patreon-paywall-img-url-2');
@@ -77,9 +78,21 @@ function patreon_plugin_setup_page()
     if (get_option('patreon-client-id', false) && get_option('patreon-client-secret', false) && get_option('patreon-creators-access-token', false)) {
         $creator_id = Patreon_Wordpress::getPatreonCreatorID();
 
-        if ($creator_id != false) {
+        if ($creator_id) {
             update_option('patreon-creator-id', $creator_id);
         }
+    }
+
+    $creator_expiry = get_option('patreon-creators-access-token-expires', time()) - time();
+
+    if ($creator_expiry >= 86400) {
+        $creator_expiry = floor($creator_expiry / 86400) . ' day(s)';
+    } else if ($creator_expiry >= 3600) {
+        $creator_expiry = floor($creator_expiry / 3600) . ' hour(s)';
+    } else if ($creator_expiry > 0) {
+        $creator_expiry = floor($creator_expiry / 60) . ' minute(s)';
+    } else {
+        $creator_expiry = 'Expired';
     }
 ?>
 
@@ -89,7 +102,7 @@ function patreon_plugin_setup_page()
     <?php settings_fields('patreon-options'); ?>
     <?php do_settings_sections('patreon-options'); ?>
 
-    <?php if ($creator_id == false) {
+    <?php if (!$creator_id) {
         ?>
     <br>
     <p>Cannot retrieve creator ID. Error connecting with Patreon.</p>
@@ -123,7 +136,7 @@ function patreon_plugin_setup_page()
 
         <tr valign="top">
         <th scope="row">Creator's Access Token</th>
-        <td><input type="text" name="patreon-creators-access-token" value="<?php echo esc_attr(get_option('patreon-creators-access-token', '')); ?>" class="large-text" /></td>
+        <td><input type="text" name="patreon-creators-access-token" value="<?php echo esc_attr(get_option('patreon-creators-access-token', '')); ?>" class="large-text" /> Expires in <?php echo $creator_expiry; ?></td>
         </tr>
 
         <tr valign="top">

@@ -6,6 +6,7 @@ if (! defined('ABSPATH')) {
 
 class Patreon_API
 {
+    public $lastResponseCode;
     private $access_token;
 
     public function __construct($access_token)
@@ -40,6 +41,8 @@ class Patreon_API
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         $authorization_header = "Authorization: Bearer " . $this->access_token;
         curl_setopt($ch, CURLOPT_HTTPHEADER, array($authorization_header));
-        return json_decode(curl_exec($ch), true);
+        $this->lastResponseCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $ret = json_decode(curl_exec($ch), true);
+        return $ret;
     }
 }
