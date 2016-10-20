@@ -86,6 +86,7 @@ class Patreon_Wordpress
         self::$api_client = new Patreon_API(get_option('patreon-creators-access-token', false));
         $user_response = self::$api_client->fetch_campaign_and_patrons();
 
+        /*
         if (self::$api_client->lastResponseCode == 401) {
             // Attempt to refresh token
             
@@ -101,7 +102,7 @@ class Patreon_Wordpress
                 self::$api_client = new Patreon_API(get_option('patreon-creators-access-token', false));
                 $user_response = self::$api_client->fetch_campaign_and_patrons();
             }
-        }
+        }*/
 
         if (empty($user_response)) {
             return false;

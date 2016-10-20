@@ -39,7 +39,7 @@ function patreon_plugin_register_settings()
 
 function patreon_plugin_setup()
 {
-    add_menu_page('Patreon Settings', 'Patreon Settings', 'manage_options', 'patreon-plugin', 'patreon_plugin_setup_page');
+    add_menu_page('Patreon', 'Patreon', 'manage_options', 'patreon-plugin', 'patreon_plugin_setup_page');
 }
 
 function patreon_plugin_setup_page()
@@ -75,7 +75,10 @@ function patreon_plugin_setup_page()
         update_option('patreon-auth-success-url', home_url());
     }
     /* update Patreon creator ID on page load */
-    if (get_option('patreon-client-id', false) && get_option('patreon-client-secret', false) && get_option('patreon-creators-access-token', false)) {
+    if (get_option('patreon-client-id', false) && 
+        get_option('patreon-client-secret', false) && 
+        get_option('patreon-creators-access-token', false)) {
+        
         $creator_id = Patreon_Wordpress::getPatreonCreatorID();
 
         if ($creator_id) {
@@ -100,7 +103,7 @@ function patreon_plugin_setup_page()
         } else if ($creator_expiry > 0) {
             $creator_expiry = floor($creator_expiry / 60) . ' minute(s)';
         } else {
-            $creator_expiry = 'Expired';
+            $creator_expiry = '???';
         }
     }
 ?>

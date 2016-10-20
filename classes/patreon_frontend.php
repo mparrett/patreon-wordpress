@@ -64,30 +64,34 @@ class Patreon_Frontend
 
     public function displayPatreonCampaignBanner()
     {
-        /* patreon banner when user patronage not high enough */
+        // patreon banner when user patronage not high enough
         $paywall_img = get_option('patreon-paywall-img-url', '');
-        $paywall_img_elem = '<img src="'.$paywall_img.'"/>';
+
+        // TODO: Pull image dimensions into settings
+        $paywall_img_elem = '<img width="375" height="138" class="patreon_paywall_btn_1" src="'.$paywall_img.'"/>';
         
         $paywall_img2 = get_option('patreon-paywall-img-url-2', '');
-        $paywall_img_elem2 = '<img src="'.$paywall_img2.'"/>';
+        $paywall_img_elem2 = '<img width="375" height="138" class="patreon_paywall_btn_2" src="'.$paywall_img2.'"/>';
 
         $creator_id = get_option('patreon-creator-id', '');
         $current_url = urlencode(self::currentPageURL());
 
         // https://www.patreon.com/bePatron?u='.$creator_id.'&redirect_uri='.$current_url
 
-        if ($creator_id != '') {
-            $login_url = Patreon_Wordpress::getAuthURL();
-            $ret = '<a href="'.$login_url.'">'.$paywall_img_elem.'</a>';
-            
-            if ($paywall_img2) {
-                $ret .= '<a href="https://www.patreon.com/bePatron?u='.$creator_id.'&redirect_uri='.$current_url.'">'.$paywall_img_elem2.'</a>';
-            }
-            return $ret;
-        } else {
+        if ($creator_id == '') {
             // No valid Patreon integration (expired token, etc.?)
-            return $paywall_img_elem;
+            return $paywall_img_elem;    
         }
+
+        // Display the actual buttons
+        $login_url = Patreon_Wordpress::getAuthURL();
+        $ret = '<a href="'.$login_url.'">'.$paywall_img_elem.'</a>';
+        
+        if ($paywall_img2) {
+            $ret .= '<a href="https://www.patreon.com/bePatron?u='.$creator_id.'&redirect_uri='.$current_url.'">'.$paywall_img_elem2.'</a>';
+        }
+        return $ret;
+        
     }
 
     public function embedPatreonContent($args)
@@ -119,11 +123,13 @@ class Patreon_Frontend
             }
         }
 
+        // Video
         if (isset($args['youtube_id']) && isset($args['youtube_width']) && is_numeric($args['youtube_width']) && isset($args['youtube_height']) && is_numeric($args['youtube_height'])) {
             return '<iframe width="'.$args['youtube_width'].'" height="'.$args['youtube_height'].'" src="https://www.youtube.com/embed/'.$args['youtube_id'].'?rel=0&amp;controls=0&amp;showinfo=0" frameborder="0" allowfullscreen></iframe>';
-        } else {
-            return self::displayPatreonCampaignBanner();
         }
+    
+        // Not video
+        return self::displayPatreonCampaignBanner();
     }
 
     public function protectContentFromUsers($content)
