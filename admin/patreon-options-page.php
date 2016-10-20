@@ -141,12 +141,12 @@ function patreon_plugin_setup_page()
     } ?>
     
         <tr valign="top">
-        <th scope="row">Button URL: Not yet a patron (or not yet paying enough)</th>
+        <th scope="row">Button URL to login as existing Patron</th>
         <td><input type="text" name="patreon-paywall-img-url" value="<?php echo esc_attr(get_option('patreon-paywall-img-url', '')); ?>" class="large-text" /></td>
         </tr>
 
         <tr valign="top">
-        <th scope="row">Additional Button URL: Not yet a patron (or not yet paying enough)</th>
+        <th scope="row">Button URL for not yet a patron (or not yet paying enough)</th>
         <td><input type="text" name="patreon-paywall-img-url-2" value="<?php echo esc_attr(get_option('patreon-paywall-img-url-2', '')); ?>" class="large-text" /></td>
         </tr>
         

@@ -161,4 +161,21 @@ class Patreon_Wordpress
 
         return $user_patronage > 0;
     }
+
+    public static function getAuthURL()
+    {
+        $client_id = get_option('patreon-client-id', false);
+
+        if ($client_id == false) {
+            return '';
+        }
+
+        // TODO: Handle logged in Patreon
+
+        $href = 'https://www.patreon.com/oauth2/authorize?response_type=code&client_id='.$client_id.'&redirect_uri='.
+            urlencode(site_url().'/patreon-authorization/');
+
+        return $href;
+    } 
+    
 }

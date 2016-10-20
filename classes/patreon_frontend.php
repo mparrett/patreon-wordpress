@@ -29,16 +29,10 @@ class Patreon_Frontend
     {
         $log_in_img = PATREON_PLUGIN_URL . 'img/log-in-with-patreon-wide@2x.png';
 
-        $client_id = get_option('patreon-client-id', false);
-
-        if ($client_id == false) {
-            return '';
+        $href = Patreon_Wordpress::getAuthURL();
+        if (!$href) {
+            return;
         }
-
-        // TODO: Handle logged in Patreon
-
-        $href = 'https://www.patreon.com/oauth2/authorize?response_type=code&client_id='.$client_id.'&redirect_uri='.
-            urlencode(site_url().'/patreon-authorization/');
 
         /* inline styles, for shame */
         echo get_option('patreon-above-button-html', '');
@@ -80,8 +74,12 @@ class Patreon_Frontend
         $creator_id = get_option('patreon-creator-id', '');
         $current_url = urlencode(self::currentPageURL());
 
+        // https://www.patreon.com/bePatron?u='.$creator_id.'&redirect_uri='.$current_url
+
         if ($creator_id != '') {
-            $ret = '<a href="https://www.patreon.com/bePatron?u='.$creator_id.'&redirect_uri='.$current_url.'">'.$paywall_img_elem.'</a>';
+            $login_url = Patreon_Wordpress::getAuthURL();
+            $ret = '<a href="'.$login_url.'">'.$paywall_img_elem.'</a>';
+            
             if ($paywall_img2) {
                 $ret .= '<a href="https://www.patreon.com/bePatron?u='.$creator_id.'&redirect_uri='.$current_url.'">'.$paywall_img_elem2.'</a>';
             }
