@@ -83,16 +83,25 @@ function patreon_plugin_setup_page()
         }
     }
 
-    $creator_expiry = get_option('patreon-creators-access-token-expires', time()) - time();
-
-    if ($creator_expiry >= 86400) {
-        $creator_expiry = floor($creator_expiry / 86400) . ' day(s)';
-    } else if ($creator_expiry >= 3600) {
-        $creator_expiry = floor($creator_expiry / 3600) . ' hour(s)';
-    } else if ($creator_expiry > 0) {
-        $creator_expiry = floor($creator_expiry / 60) . ' minute(s)';
-    } else {
-        $creator_expiry = 'Expired';
+    $creator_expiry = get_option('patreon-creators-access-token-expires', false);
+    
+    if ($creator_expiry === false) {
+        // Not sure when it expires -- likely entered manually from initial setup
+        $creator_expiry = '???';
+    }
+    else
+    {
+        $creator_expiry = $creator_expiry - time();
+        
+        if ($creator_expiry >= 86400) {
+            $creator_expiry = floor($creator_expiry / 86400) . ' day(s)';
+        } else if ($creator_expiry >= 3600) {
+            $creator_expiry = floor($creator_expiry / 3600) . ' hour(s)';
+        } else if ($creator_expiry > 0) {
+            $creator_expiry = floor($creator_expiry / 60) . ' minute(s)';
+        } else {
+            $creator_expiry = 'Expired';
+        }
     }
 ?>
 
