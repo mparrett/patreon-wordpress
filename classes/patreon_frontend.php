@@ -40,14 +40,17 @@ class Patreon_Frontend
         /* get current users meta data */
         $user_meta = get_user_meta($user->ID);
         
+        $ret .= '<pre>';
         $ret .= $user_meta['patreon_refresh_token'][0]; $ret .= '<br/>';
         $ret .= $user_meta['patreon_access_token'][0]; $ret .= '<br/>';
         $ret .= $user_meta['patreon_user'][0]; $ret .= '<br/>';
         $ret .= $user_meta['patreon_created'][0]; $ret .= '<br/>';
         $ret .= $user_meta['user_firstname'][0]; $ret .= '<br/>';
         $ret .= $user_meta['user_lastname'][0]; $ret .= '<br/>';
+        $ret .= print_r($user_meta, true);
 
-        $ret .= sprintf("$%.2f", Patreon_Wordpress::getUserPatronage() / 100); $ret .= "<br/>";        
+        $ret .= sprintf("$%.2f", Patreon_Wordpress::getUserPatronage() / 100); $ret .= "<br/>";
+        $ret .= '</pre>';        
         return $ret;
     }
     
