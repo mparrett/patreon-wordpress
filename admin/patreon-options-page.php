@@ -81,7 +81,15 @@ function patreon_plugin_setup_page()
         get_option('patreon-creators-access-token', false)) {
         
         $creator_id = Patreon_Wordpress::getPatreonCreatorID();
-
+        
+        if (!$creator_id) {
+            // Attempt to refresh token
+            if (Patreon_Wordpress::refreshCreatorToken()) {
+                // Retry getting creator ID
+                $creator_id = Patreon_Wordpress::getPatreonCreatorID();
+            }
+        }
+        
         if ($creator_id) {
             update_option('patreon-creator-id', $creator_id);
         }

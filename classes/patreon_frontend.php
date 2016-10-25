@@ -99,7 +99,7 @@ class Patreon_Frontend
 
         if ($creator_id == '') {
             // No valid Patreon integration (expired token, etc.?)
-            return $paywall_img_elem2;    
+            return $paywall_img_elem2;
         }
 
         $current_url = urlencode(self::currentPageURL());
@@ -114,7 +114,8 @@ class Patreon_Frontend
     {
         // Display the actual buttons
         $ret = $this->getPaywallButton1();
-        
+
+        $paywall_img2 = get_option('patreon-paywall-img-url-2', '');
         if ($paywall_img2) {
             $ret .= $this->getPaywallButton2();
         }

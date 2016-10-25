@@ -120,10 +120,10 @@ class Patreon_Wordpress
             update_option('patreon-creators-access-token', $tokens['access_token']);
             update_option('patreon-creators-access-token-expires', time() + $tokens['expires_in']);
 
-            // Retry
-            //self::$api_client = new Patreon_API(get_option('patreon-creators-access-token', false));
-            //$user_response = self::$api_client->fetch_campaign_and_patrons();
+            return true;
         }
+        
+        return false;
     }
 
     /**
