@@ -86,24 +86,6 @@ class Patreon_Wordpress
         self::$api_client = new Patreon_API(get_option('patreon-creators-access-token', false));
         $user_response = self::$api_client->fetch_campaign_and_patrons();
 
-        /*
-        if (self::$api_client->lastResponseCode == 401) {
-            // Attempt to refresh token
-            
-            $oauth_client = new Patreon_Oauth;
-            $tok = get_option('patreon-creators-refresh-token');
-            $tokens = $oauth_client->refresh_token($tok, home_url());
-            if ($tokens && !empty($tokens['access_token'])) {
-                // $tokens['token_type'] == 'Bearer'
-                update_option('patreon-creators-access-token', $tokens['access_token']);
-                update_option('patreon-creators-access-token-expires', time() + $tokens['expires_in']);
-
-                // Retry
-                self::$api_client = new Patreon_API(get_option('patreon-creators-access-token', false));
-                $user_response = self::$api_client->fetch_campaign_and_patrons();
-            }
-        }*/
-
         if (empty($user_response)) {
             return false;
         }
@@ -120,6 +102,28 @@ class Patreon_Wordpress
         }
 
         return $creator_id;
+    }
+
+    public static function refreshCreatorToken()
+    {
+        //if (self::$api_client->lastResponseCode != 401)
+            //return;
+
+        // Attempt to refresh token
+        
+        $oauth_client = new Patreon_Oauth;
+        $tok = get_option('patreon-creators-refresh-token');
+        $tokens = $oauth_client->refresh_token($tok, home_url());
+        
+        if ($tokens && !empty($tokens['access_token'])) {
+            // $tokens['token_type'] == 'Bearer'
+            update_option('patreon-creators-access-token', $tokens['access_token']);
+            update_option('patreon-creators-access-token-expires', time() + $tokens['expires_in']);
+
+            // Retry
+            //self::$api_client = new Patreon_API(get_option('patreon-creators-access-token', false));
+            //$user_response = self::$api_client->fetch_campaign_and_patrons();
+        }
     }
 
     /**
