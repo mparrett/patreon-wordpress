@@ -75,6 +75,7 @@ function patreon_plugin_setup_page()
         update_option('patreon-auth-success-url', home_url());
     }
     /* update Patreon creator ID on page load */
+    
     if (get_option('patreon-client-id', false) && 
         get_option('patreon-client-secret', false) && 
         get_option('patreon-creators-access-token', false)) {

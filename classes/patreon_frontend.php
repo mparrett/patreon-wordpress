@@ -23,26 +23,35 @@ class Patreon_Frontend
 
         add_shortcode('patreon_content', array($this, 'embedPatreonContent'));
         add_filter('the_content', array($this, 'protectContentFromUsers'));
+
+        add_shortcode('patreon_login_button', array($this, 'getPatreonButton'));
     }
 
     public function showPatreonButton()
+    {
+        echo getPatreonButton();
+    }
+
+    public function getPatreonButton()
     {
         $log_in_img = PATREON_PLUGIN_URL . 'img/log-in-with-patreon-wide@2x.png';
 
         $href = Patreon_Wordpress::getAuthURL();
         if (!$href) {
-            return;
+            return '';
         }
 
         /* inline styles, for shame */
-        echo get_option('patreon-above-button-html', '');
+        $ret = '';
+        $ret .= get_option('patreon-above-button-html', '');
 
         if (isset($_REQUEST['patreon-msg']) && $_REQUEST['patreon-msg'] == 'login_with_patreon') {
-            echo get_option('patreon-login-wp-message-html', '');
+            $ret .= get_option('patreon-login-wp-message-html', '');
         } else {
-            echo apply_filters('ptrn/login_button', '<a href="'.$href.'" class="ptrn-button" data-ptrn_nonce="' . 
+            $ret .= apply_filters('ptrn/login_button', '<a href="'.$href.'" class="ptrn-button" data-ptrn_nonce="' . 
                 wp_create_nonce('patreon-nonce').'"><img src="'.$log_in_img.'" width="272" height="42" /></a>');
         }
+        return $ret;
     }
 
     public function currentPageURL()
@@ -62,36 +71,55 @@ class Patreon_Frontend
         return $pageURL;
     }
 
-    public function displayPatreonCampaignBanner()
+    public function getPaywallButton1()
     {
         // patreon banner when user patronage not high enough
+        // TODO: Pull image dimensions from settings
         $paywall_img = get_option('patreon-paywall-img-url', '');
-
-        // TODO: Pull image dimensions into settings
         $paywall_img_elem = '<img width="375" height="138" class="patreon_paywall_btn_1" src="'.$paywall_img.'"/>';
-        
-        $paywall_img2 = get_option('patreon-paywall-img-url-2', '');
-        $paywall_img_elem2 = '<img width="375" height="138" class="patreon_paywall_btn_2" src="'.$paywall_img2.'"/>';
-
         $creator_id = get_option('patreon-creator-id', '');
-        $current_url = urlencode(self::currentPageURL());
-
-        // https://www.patreon.com/bePatron?u='.$creator_id.'&redirect_uri='.$current_url
 
         if ($creator_id == '') {
             // No valid Patreon integration (expired token, etc.?)
             return $paywall_img_elem;    
         }
 
+        $current_url = urlencode(self::currentPageURL());
+ 
+        $ret = '<a href="'.Patreon_Wordpress::getAuthURL().'">'.$paywall_img_elem.'</a>';
+
+        return $ret;
+    }
+    
+    public function getPaywallButton2()
+    {
+        $paywall_img2 = get_option('patreon-paywall-img-url-2', '');
+        $paywall_img_elem2 = '<img width="375" height="138" class="patreon_paywall_btn_2" src="'.$paywall_img2.'"/>';
+        $creator_id = get_option('patreon-creator-id', '');
+
+        if ($creator_id == '') {
+            // No valid Patreon integration (expired token, etc.?)
+            return $paywall_img_elem2;    
+        }
+
+        $current_url = urlencode(self::currentPageURL());
+
+        $ret = '';
+        $ret .= '<a href="https://www.patreon.com/bePatron?u='.$creator_id.'&redirect_uri='.$current_url.'">'.$paywall_img_elem2.'</a>';
+        return $ret;
+    }
+    
+
+    public function displayPatreonCampaignBanner()
+    {
         // Display the actual buttons
-        $login_url = Patreon_Wordpress::getAuthURL();
-        $ret = '<a href="'.$login_url.'">'.$paywall_img_elem.'</a>';
+        $ret = getPaywallButton1();
         
         if ($paywall_img2) {
-            $ret .= '<a href="https://www.patreon.com/bePatron?u='.$creator_id.'&redirect_uri='.$current_url.'">'.$paywall_img_elem2.'</a>';
+            $ret .= getPaywallButton2();
         }
+
         return $ret;
-        
     }
 
     public function embedPatreonContent($args)
