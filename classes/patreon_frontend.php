@@ -25,8 +25,22 @@ class Patreon_Frontend
         add_filter('the_content', array($this, 'protectContentFromUsers'));
 
         add_shortcode('patreon_login_button', array($this, 'getPatreonButton'));
+        add_shortcode('debug_patreon_user', array($this, 'debugPatreonUser'));
     }
 
+    public function debugPatreonUser()
+    {
+        $ret = 'DEBUG: ';
+        $ret .= get_user_meta('patreon_refresh_token'); $ret .= '<br/>';
+        $ret .= get_user_meta('patreon_access_token'); $ret .= '<br/>';
+        $ret .= get_user_meta('patreon_user'); $ret .= '<br/>';
+        $ret .= get_user_meta('patreon_created'); $ret .= '<br/>';
+        $ret .= get_user_meta('user_firstname'); $ret .= '<br/>';
+        $ret .= get_user_meta('user_lastname'); $ret .= '<br/>';
+        $ret .= sprintf("$%.2f", Patreon_Wordpress::getUserPatronage() / 100); $ret .= "<br/>";        
+        return $ret;
+    }
+    
     public function showPatreonButton()
     {
         echo $this->getPatreonButton();
