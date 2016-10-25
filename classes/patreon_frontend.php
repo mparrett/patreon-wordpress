@@ -113,10 +113,10 @@ class Patreon_Frontend
     public function displayPatreonCampaignBanner()
     {
         // Display the actual buttons
-        $ret = getPaywallButton1();
+        $ret = $this->getPaywallButton1();
         
         if ($paywall_img2) {
-            $ret .= getPaywallButton2();
+            $ret .= $this->getPaywallButton2();
         }
 
         return $ret;
