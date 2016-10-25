@@ -32,7 +32,6 @@ class Patreon_Frontend
     {
         $ret = 'DEBUG: ';
         
-        
         $user = wp_get_current_user();
         if ($user == false) {
             return false;
