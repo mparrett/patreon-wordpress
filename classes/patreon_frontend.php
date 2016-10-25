@@ -43,8 +43,9 @@ class Patreon_Frontend
         $ret .= '<pre>';
         $fields = array('patreon_refresh_token', 'patreon_access_token', 'patreon_user', 'patreon_created', 'user_firstname', 'user_lastname');
 
-        foreach($fields as $field)
+        foreach($fields as $field) {
             $ret .= $field . ' = \'' . $user_meta[$field][0]; $ret .= '\'<br/>';
+        }
         
         $ret .= sprintf("$%.2f", Patreon_Wordpress::getUserPatronage() / 100); $ret .= "<br/>";
         $ret .= '</pre>';        
