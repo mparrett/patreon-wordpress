@@ -74,6 +74,7 @@ function patreon_plugin_setup_page()
     if (!get_option('patreon-auth-success-url', false)) {
         update_option('patreon-auth-success-url', home_url());
     }
+    
     /* update Patreon creator ID on page load */
     
     if (get_option('patreon-client-id', false) && 
@@ -89,7 +90,7 @@ function patreon_plugin_setup_page()
                 $creator_id = Patreon_Wordpress::getPatreonCreatorID();
             }
         }
-        
+
         if ($creator_id) {
             update_option('patreon-creator-id', $creator_id);
         }
