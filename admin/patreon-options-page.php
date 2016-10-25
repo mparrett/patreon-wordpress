@@ -198,8 +198,22 @@ function patreon_plugin_setup_page()
     </table>
 
     <?php submit_button(); ?>
-    
 </form>
+
+<div>
+    <h3>Helpful Info</h3>
+    
+    <h4>Short codes:</h4>
+    <table>
+    <thead>
+        <tr><th>Code</th><th>Description</th><th>Args</th></tr>
+    </thead>
+    <tbody>
+        <tr><td><em>patreon_login_button</em></td><td>Displays a "Login with Patreon" button</td><td></td></tr>
+        <tr><td><em>patreon_content</em></td><td>Displays content from associated slug</td><td>slug</td></tr>
+    </tbody>
+    </table>
+</div>
 
 <?php
 
