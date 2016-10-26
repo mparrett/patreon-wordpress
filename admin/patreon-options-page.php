@@ -182,7 +182,7 @@ function patreon_plugin_setup_page()
         
         <tr valign="top">
         <th scope="row">Creator ID</th>
-        <td><input type="text" value="<?php echo esc_attr(get_option('patreon-creator-id', '')); ?>" class="large-text" /></td>
+        <td><input type="text" name="patreon-creator-id" value="<?php echo esc_attr(get_option('patreon-creator-id', '')); ?>" class="large-text" /></td>
         </tr>
     
         <tr valign="top">
