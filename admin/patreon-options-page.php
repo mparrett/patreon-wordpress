@@ -86,6 +86,7 @@ function patreon_plugin_setup_page()
         $creator_id = Patreon_Wordpress::getPatreonCreatorID();
         
         if (!$creator_id) {
+            /*
             // Attempt to refresh token
             if (Patreon_Wordpress::refreshCreatorToken()) {
                 $message = 'Refreshed creator tokens.';
@@ -94,9 +95,10 @@ function patreon_plugin_setup_page()
             } else {
                 $message = 'Unable to refresh creator tokens.';
             }
+            */
         }
-
-        if ($creator_id) {
+        else
+        {
             update_option('patreon-creator-id', $creator_id);
         }
     }
@@ -176,14 +178,10 @@ function patreon_plugin_setup_page()
         <td><input type="text" name="patreon-creators-refresh-token" value="<?php echo esc_attr(get_option('patreon-creators-refresh-token', '')); ?>" class="large-text" /></td>
         </tr>
         
-        <?php if (get_option('patreon-creator-id', false)) {
-        ?>
         <tr valign="top">
         <th scope="row">Creator ID</th>
-        <td><input type="text" value="<?php echo esc_attr(get_option('patreon-creator-id', '')); ?>" disabled class="large-text" /></td>
+        <td><input type="text" value="<?php echo esc_attr(get_option('patreon-creator-id', '')); ?>" class="large-text" /></td>
         </tr>
-        <?php 
-    } ?>
     
         <tr valign="top">
         <th scope="row">Button URL to login as existing Patron</th>
@@ -230,6 +228,7 @@ function patreon_plugin_setup_page()
     <tbody>
         <tr><td><em>patreon_login_button</em></td><td>Displays a "Login with Patreon" button</td><td></td></tr>
         <tr><td><em>patreon_content</em></td><td>Displays content from associated slug</td><td>slug</td></tr>
+        <tr><td><em>patreon_level</em></td><td>Displays Patreon contribution amount</td><td>fmt,alt</td></tr>
     </tbody>
     </table>
 </div>
