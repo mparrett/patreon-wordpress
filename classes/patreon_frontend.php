@@ -152,7 +152,7 @@ class Patreon_Frontend
     public function showPatreonLevel($args)
     {
         /* check if shortcode has slug parameter */
-        $fmt = '(%d)';
+        $fmt = '($%d)';
         $alt = '';
         
         if (isset($args['fmt'])) $fmt = $args['fmt'];
