@@ -118,6 +118,7 @@ class Patreon_Wordpress
         if ($tokens && !empty($tokens['access_token'])) {
             // $tokens['token_type'] == 'Bearer'
             update_option('patreon-creators-access-token', $tokens['access_token']);
+            update_option('patreon-creators-refresh-token', $tokens['refresh_token']);
             update_option('patreon-creators-access-token-expires', time() + $tokens['expires_in']);
 
             return true;
