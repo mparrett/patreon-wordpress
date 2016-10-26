@@ -113,7 +113,7 @@ class Patreon_Wordpress
         
         $oauth_client = new Patreon_Oauth;
         $tok = get_option('patreon-creators-refresh-token');
-        $tokens = $oauth_client->refresh_token($tok, home_url());
+        $tokens = $oauth_client->refresh_token($tok);
         
         if ($tokens && !empty($tokens['access_token'])) {
             // $tokens['token_type'] == 'Bearer'

@@ -75,6 +75,8 @@ function patreon_plugin_setup_page()
         update_option('patreon-auth-success-url', home_url());
     }
     
+    $message = '';
+
     /* update Patreon creator ID on page load */
     
     if (get_option('patreon-client-id', false) && 
@@ -86,8 +88,11 @@ function patreon_plugin_setup_page()
         if (!$creator_id) {
             // Attempt to refresh token
             if (Patreon_Wordpress::refreshCreatorToken()) {
+                $message = 'Refreshed creator tokens.';
                 // Retry getting creator ID
                 $creator_id = Patreon_Wordpress::getPatreonCreatorID();
+            } else {
+                $message = 'Unable to refresh creator tokens.';
             }
         }
 
@@ -124,15 +129,20 @@ function patreon_plugin_setup_page()
     <?php settings_fields('patreon-options'); ?>
     <?php do_settings_sections('patreon-options'); ?>
 
+    <?php if ($message) {
+            ?>
+        <br>
+        <p><php echo $message; ?></p><br/>
+        <?php 
+        } ?>
+
     <?php if (!$creator_id) {
         ?>
-    <br>
+    <br/>
     <p>Cannot retrieve creator ID. Error connecting with Patreon.</p>
     <?php 
     } ?>
-
-    <br>
-
+    
     <h2>API Settings</h2>
     <table class="form-table">
         
