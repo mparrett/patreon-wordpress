@@ -154,14 +154,16 @@ class Patreon_Frontend
         /* check if shortcode has slug parameter */
         $fmt = '(%d)';
         $alt = '';
+        
         if (isset($args['fmt'])) $fmt = $args['fmt'];
-        if (isset($args['alt'])) $fmt = $args['alt'];
+        if (isset($args['alt'])) $alt = $args['alt'];
 
         $level = Patreon_Wordpress::getUserPatronage() / 100;
         if (!$level)
         {
-            return $args['alt'];
+            return $alt;
         }
+
         return sprintf($fmt, $level);
     }
 
