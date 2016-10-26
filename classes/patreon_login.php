@@ -50,26 +50,8 @@ class Patreon_Login
 
         // Handle creating new user
         if (!$user) {
-            /* create wordpress user if no account exists with provided email address */
-            $random_password = wp_generate_password(12, false);
-            $user_id = wp_create_user($username, $random_password, $email);
-
-            if ($user_id) {
-                $user = get_user_by('id', $user_id);
-
-                // Update WP user meta data with patreon data
-                self::_update_all_meta($user_id, $tokens, $patreon_user);
-        
-                // Update extra minted field
-                update_user_meta($user_id, 'patreon_token_minted', microtime());
-
-                // Log in current user
-                self::_login_user($user);
-            } else {
-                /* wordpress account creation failed #HANDLE_ERROR */
-            }
-
-            return;
+            if (self::createAndLoginNewUser())
+                return;
         }
         
         // Valid existing user
@@ -86,6 +68,27 @@ class Patreon_Login
         
         // Login
         self::_login_user($user);
+    }
+
+    /**
+     * Create wordpress user if no account exists with provided email address 
+     */
+    private static function createAndLoginNewUser($username, $email, $tokens, $patreon_user)
+    {
+        $user_id = wp_create_user($username, wp_generate_password(12, false), $email);
+
+        if (!$user_id) {
+            /* wordpress account creation failed #HANDLE_ERROR */        
+            return false;
+        }
+
+        $user = get_user_by('id', $user_id);
+
+        // Update WP user meta data with patreon data
+        self::_update_all_meta($user_id, $tokens, $patreon_user);
+
+        // Update extra minted field
+        update_user_meta($user_id, 'patreon_token_minted', microtime());
     }
 
     /**

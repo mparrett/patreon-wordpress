@@ -26,6 +26,7 @@ class Patreon_Frontend
 
         add_shortcode('patreon_login_button', array($this, 'getPatreonButton'));
         add_shortcode('debug_patreon_user', array($this, 'debugPatreonUser'));
+        add_shortcode('patreon_level', array($this, 'showPatreonLevel'));
     }
 
     public function debugPatreonUser()
@@ -146,6 +147,22 @@ class Patreon_Frontend
         }
 
         return $ret;
+    }
+
+    public function showPatreonLevel($args)
+    {
+        /* check if shortcode has slug parameter */
+        $fmt = '(%d)';
+        $alt = '';
+        if (isset($args['fmt'])) $fmt = $args['fmt'];
+        if (isset($args['alt'])) $fmt = $args['alt'];
+
+        $level = Patreon_Wordpress::getUserPatronage() / 100;
+        if (!$level)
+        {
+            return $args['alt'];
+        }
+        return sprintf($fmt, $level);
     }
 
     public function embedPatreonContent($args)
