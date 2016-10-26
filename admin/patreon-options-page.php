@@ -83,7 +83,7 @@ function patreon_plugin_setup_page()
         get_option('patreon-client-secret', false) && 
         get_option('patreon-creators-access-token', false)) {
         
-        $creator_id = Patreon_Wordpress::getPatreonCreatorID();
+        //$creator_id = Patreon_Wordpress::getPatreonCreatorID();
         
         if (!$creator_id) {
             /*
@@ -99,9 +99,11 @@ function patreon_plugin_setup_page()
         }
         else
         {
-            update_option('patreon-creator-id', $creator_id);
+            //update_option('patreon-creator-id', $creator_id);
         }
     }
+    
+    $creator_id = get_option('patreon-creator-id');
 
     $creator_expiry = get_option('patreon-creators-access-token-expires', false);
     
