@@ -99,7 +99,7 @@ class Patreon_Routing
         $user = Patreon_Login::createUserFromPatreon($user_response, $tokens);
 
         wp_redirect(get_option('patreon-auth-success-url', home_url()), 302); // ??? Should this be a 302?
-        
+
         exit;
     }
 }

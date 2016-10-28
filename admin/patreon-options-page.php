@@ -79,12 +79,12 @@ function patreon_plugin_setup_page()
 
     /* update Patreon creator ID on page load */
     
-    if (get_option('patreon-client-id', false) && 
-        get_option('patreon-client-secret', false) && 
+    if (get_option('patreon-client-id', false) &&
+        get_option('patreon-client-secret', false) &&
         get_option('patreon-creators-access-token', false)) {
         
         //$creator_id = Patreon_Wordpress::getPatreonCreatorID();
-        
+
         if (!$creator_id) {
             /*
             // Attempt to refresh token
@@ -96,9 +96,7 @@ function patreon_plugin_setup_page()
                 $message = 'Unable to refresh creator tokens.';
             }
             */
-        }
-        else
-        {
+        } else {
             //update_option('patreon-creator-id', $creator_id);
         }
     }
@@ -110,22 +108,19 @@ function patreon_plugin_setup_page()
     if ($creator_expiry === false) {
         // Not sure when it expires -- likely entered manually from initial setup
         $creator_expiry = '???';
-    }
-    else
-    {
+    } else {
         $creator_expiry = $creator_expiry - time();
         
         if ($creator_expiry >= 86400) {
             $creator_expiry = floor($creator_expiry / 86400) . ' day(s)';
-        } else if ($creator_expiry >= 3600) {
+        } elseif ($creator_expiry >= 3600) {
             $creator_expiry = floor($creator_expiry / 3600) . ' hour(s)';
-        } else if ($creator_expiry > 0) {
+        } elseif ($creator_expiry > 0) {
             $creator_expiry = floor($creator_expiry / 60) . ' minute(s)';
         } else {
             $creator_expiry = '???';
         }
-    }
-?>
+    } ?>
 
 <h1>Patreon API Settings</h1>
 
@@ -134,11 +129,11 @@ function patreon_plugin_setup_page()
     <?php do_settings_sections('patreon-options'); ?>
 
     <?php if ($message) {
-            ?>
+        ?>
         <br>
         <p><php echo $message; ?></p><br/>
         <?php 
-        } ?>
+    } ?>
 
     <?php if (!$creator_id) {
         ?>

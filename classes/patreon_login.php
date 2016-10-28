@@ -51,19 +51,14 @@ class Patreon_Login
         $user = get_user_by('email', $email);
 
         // Handle creating new user
-        if (!$user) 
-        {
+        if (!$user) {
             if (self::createAndLoginNewUser($username, $email, $tokens, $patreon_user)) {
                 // Login
                 self::_login_user($user);
-            }
-            else
-            {
+            } else {
                 // Error
             }
-        }
-        else
-        {
+        } else {
             // Valid existing user
 
             /* update user meta data with patreon data */
@@ -82,14 +77,14 @@ class Patreon_Login
     }
 
     /**
-     * Create wordpress user if no account exists with provided email address 
+     * Create wordpress user if no account exists with provided email address
      */
     private static function createAndLoginNewUser($username, $email, $tokens, $patreon_user)
     {
         $user_id = wp_create_user($username, wp_generate_password(12, false), $email);
 
         if (!$user_id) {
-            /* wordpress account creation failed #HANDLE_ERROR */        
+            /* wordpress account creation failed #HANDLE_ERROR */
             return false;
         }
 

@@ -44,12 +44,14 @@ class Patreon_Frontend
         $ret .= '<pre>';
         $fields = array('patreon_refresh_token', 'patreon_access_token', 'patreon_user', 'patreon_created', 'user_firstname', 'user_lastname');
 
-        foreach($fields as $field) {
-            $ret .= $field . ' = \'' . $user_meta[$field][0]; $ret .= '\'<br/>';
+        foreach ($fields as $field) {
+            $ret .= $field . ' = \'' . $user_meta[$field][0];
+            $ret .= '\'<br/>';
         }
         
-        $ret .= sprintf("$%.2f", Patreon_Wordpress::getUserPatronage() / 100); $ret .= "<br/>";
-        $ret .= '</pre>';        
+        $ret .= sprintf("$%.2f", Patreon_Wordpress::getUserPatronage() / 100);
+        $ret .= "<br/>";
+        $ret .= '</pre>';
         return $ret;
     }
     
@@ -74,7 +76,7 @@ class Patreon_Frontend
         if (isset($_REQUEST['patreon-msg']) && $_REQUEST['patreon-msg'] == 'login_with_patreon') {
             $ret .= get_option('patreon-login-wp-message-html', '');
         } else {
-            $ret .= apply_filters('ptrn/login_button', '<a href="'.$href.'" class="ptrn-button" data-ptrn_nonce="' . 
+            $ret .= apply_filters('ptrn/login_button', '<a href="'.$href.'" class="ptrn-button" data-ptrn_nonce="' .
                 wp_create_nonce('patreon-nonce').'"><img src="'.$log_in_img.'" width="272" height="42" /></a>');
         }
         return $ret;
@@ -107,7 +109,7 @@ class Patreon_Frontend
 
         if ($creator_id == '') {
             // No valid Patreon integration (expired token, etc.?)
-            return $paywall_img_elem;    
+            return $paywall_img_elem;
         }
 
         $current_url = urlencode(self::currentPageURL());
@@ -155,12 +157,15 @@ class Patreon_Frontend
         $fmt = '($%d)';
         $alt = '';
         
-        if (isset($args['fmt'])) $fmt = $args['fmt'];
-        if (isset($args['alt'])) $alt = $args['alt'];
+        if (isset($args['fmt'])) {
+            $fmt = $args['fmt'];
+        }
+        if (isset($args['alt'])) {
+            $alt = $args['alt'];
+        }
 
         $level = Patreon_Wordpress::getUserPatronage() / 100;
-        if (!$level)
-        {
+        if (!$level) {
             return $alt;
         }
 
@@ -172,8 +177,9 @@ class Patreon_Frontend
         /* example shortcode [patreon_content slug="test-example"]
 
         /* check if shortcode has slug parameter */
-        if (!isset($args['slug']))
+        if (!isset($args['slug'])) {
             return;
+        }
 
         /* get patreon-content post with matching url slug */
         $patreon_content = get_page_by_path($args['slug'], OBJECT, 'patreon-content');
@@ -211,7 +217,7 @@ class Patreon_Frontend
 
         $post_type = get_post_type();
 
-        if ((is_singular('patreon-content') && $post_type == 'patreon-content') 
+        if ((is_singular('patreon-content') && $post_type == 'patreon-content')
             || (is_singular() && ($post_type == 'post' || $post_type == 'page'))) {
             $patreon_level = get_post_meta($post->ID, 'patreon-level', true);
 

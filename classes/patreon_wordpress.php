@@ -110,7 +110,7 @@ class Patreon_Wordpress
             //return;
 
         // Attempt to refresh token
-        
+
         $oauth_client = new Patreon_Oauth;
         $tok = get_option('patreon-creators-refresh-token');
         $tokens = $oauth_client->refresh_token($tok);
@@ -201,6 +201,5 @@ class Patreon_Wordpress
             urlencode(site_url().'/patreon-authorization/');
 
         return $href;
-    } 
-    
+    }
 }
