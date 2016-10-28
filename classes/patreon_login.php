@@ -27,7 +27,12 @@ class Patreon_Login
 
         $email = $patreon_user['email'];
 
-        $name = strtolower(str_replace(' ', '', $patreon_user['first_name'].'_'.$patreon_user['last_name']));
+        $repl_name = !empty($patreon_user['first_name']) ? $patreon_user['first_name'] : 'Patron';
+        
+        if (!empty($patreon_user['last_name']))
+            $repl_name .= '_' . $patreon_user['last_name'];
+
+        $name = strtolower(str_replace(' ', '', $repl_name));
         
         if (validate_username($name) && username_exists($name) == false) {
             $username = sanitize_user($name, true);
