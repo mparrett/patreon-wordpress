@@ -32,10 +32,12 @@ class Patreon_Login
         if (validate_username($name) && username_exists($name) == false) {
             $username = sanitize_user($name, true);
         } else {
+            // Assign a username based on the first part of their email
             $username = explode('@', $patreon_user['email']);
             $username = strtolower(sanitize_user($username[0]));
         }
 
+        // If it already exists, or the username with a suffix exists, append the next sequential suffix
         if (username_exists($username)) {
             $suffix = $wpdb->get_var($wpdb->prepare(
                 "SELECT 1 + SUBSTR(user_login, %d) FROM $wpdb->users WHERE user_login REGEXP %s ORDER BY 1 DESC LIMIT 1",
@@ -49,25 +51,34 @@ class Patreon_Login
         $user = get_user_by('email', $email);
 
         // Handle creating new user
-        if (!$user) {
-            if (self::createAndLoginNewUser())
-                return;
+        if (!$user) 
+        {
+            if (self::createAndLoginNewUser($username, $email, $tokens, $patreon_user)) {
+                // Login
+                self::_login_user($user);
+            }
+            else
+            {
+                // Error
+            }
         }
-        
-        // Valid existing user
+        else
+        {
+            // Valid existing user
 
-        /* update user meta data with patreon data */
-        self::_update_all_meta($user->ID, $tokens, $patreon_user);
+            /* update user meta data with patreon data */
+            self::_update_all_meta($user->ID, $tokens, $patreon_user);
 
-        // log user into existing wordpress account with matching email address -- if not disabled
-        if (get_option('patreon-disable-auto-login', false)) {
-            // Redirect and manual login
-            wp_redirect(wp_login_url().'?patreon-msg=login_with_patreon', '301');
-            exit;
+            // log user into existing wordpress account with matching email address -- if not disabled
+            if (get_option('patreon-disable-auto-login', false)) {
+                // Redirect and manual login
+                wp_redirect(wp_login_url().'?patreon-msg=login_with_patreon', '301');
+                exit;
+            }
+
+            // Login
+            self::_login_user($user);
         }
-        
-        // Login
-        self::_login_user($user);
     }
 
     /**
@@ -89,6 +100,8 @@ class Patreon_Login
 
         // Update extra minted field
         update_user_meta($user_id, 'patreon_token_minted', microtime());
+        
+        return $user;
     }
 
     /**
