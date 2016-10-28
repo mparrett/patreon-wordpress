@@ -52,7 +52,8 @@ class Patreon_Login
 
         // Handle creating new user
         if (!$user) {
-            if (self::createAndLoginNewUser($username, $email, $tokens, $patreon_user)) {
+            $user = self::createAndLoginNewUser($username, $email, $tokens, $patreon_user);
+            if ($user) {
                 // Login
                 self::_login_user($user);
             } else {
