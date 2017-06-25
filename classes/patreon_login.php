@@ -70,7 +70,7 @@ class Patreon_Login
             /* update user meta data with patreon data */
             self::_update_all_meta($user->ID, $tokens, $patreon_user);
 
-            // log user into existing wordpress account with matching email address -- if not disabled
+            // Uncommon: log user into existing wordpress account with matching email address -- if not disabled
             if (get_option('patreon-disable-auto-login', false)) {
                 // Redirect and manual login
                 wp_redirect(wp_login_url().'?patreon-msg=login_with_patreon', '301');
@@ -112,7 +112,7 @@ class Patreon_Login
     {
         wp_set_current_user($user->ID, $user->user_login);
         wp_set_auth_cookie($user->ID);
-        do_action('wp_login', $user->user_login);
+        do_action('wp_login', $user->user_login, $user);
     }
 
     /**
